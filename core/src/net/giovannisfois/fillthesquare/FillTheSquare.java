@@ -3,39 +3,102 @@ package net.giovannisfois.fillthesquare;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class FillTheSquare extends ApplicationAdapter {
+
+	final float WORLD_WIDTH = 22;
+	final float WORLD_HEIGHT = 16;
+
 	SpriteBatch batch;
-	Texture img;
-	private TextureRegion region;
-	private Sprite sprite;
-	
+	Texture spritesheet;
+
+	private TextureRegion titleSquareRegion;
+	private TextureRegion usedSquareRegion;
+	private TextureRegion emptySquareRegion;
+	private TextureRegion nextSquareRegion;
+
+	private Sprite titleSquare;
+
+	private Sprite usedSquare;
+	private Sprite emptySquare;
+	private Sprite nextSquare;
+
+	OrthographicCamera camera;
+
+
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-		region = new TextureRegion(img, 0, 0, img.getWidth()/2, img.getHeight()/2);
-		sprite = new Sprite(region);
-		sprite.setPosition(Gdx.graphics.getWidth()*2/3, Gdx.graphics.getWidth()*2 );
-		sprite.setRotation(275);
+		spritesheet = new Texture("bluesheet.png");
+
+		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
+
+		usedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
+		emptySquareRegion = new TextureRegion(spritesheet,288, 194,49,49);
+		nextSquareRegion  = new TextureRegion(spritesheet,288, 194,49,49);
+
+		titleSquare = new Sprite(titleSquareRegion);
+		titleSquare.setSize(6,2);
+
+		usedSquare = new Sprite(usedSquareRegion);
+		usedSquare.setSize(2,2);
+
+		emptySquare = new Sprite(emptySquareRegion);
+		emptySquare.setSize(2,2);
+
+		usedSquare = new Sprite(usedSquareRegion);
+		usedSquare.setSize(2,2);
+
+		nextSquare = new Sprite(nextSquareRegion);
+		nextSquare.setSize(2,2);
+
+		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
+
+		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_WIDTH*aspectRatio);
+		camera.position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2,0);
+
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(250, 250, 250, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.draw(img, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, 120, 120, 0, 0, img.getWidth(), img.getHeight(), false, false);
-		batch.draw(img, Gdx.graphics.getWidth()/2, 0, 120, 120, 0, img.getWidth()/2, img.getWidth()/2, img.getHeight()/2, false, false);
 
-		batch.draw(region, 10, 10);
-		batch.draw(region, Gdx.graphics.getWidth()*2/3, 0,region.getRegionWidth()/2, region.getRegionHeight());
-		sprite.draw(batch);
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		//batch.disableBlending();
+		titleSquare.setPosition(2,10);
+		titleSquare.draw(batch);
+		titleSquare.setPosition(2,6);
+		titleSquare.draw(batch);
+
+		emptySquare.setPosition(10,10);
+		emptySquare.draw(batch);
+		emptySquare.setPosition(12,10);
+		emptySquare.draw(batch);
+		emptySquare.setPosition(14,10);
+		emptySquare.draw(batch);
+		usedSquare.setPosition(16,10);
+		usedSquare.draw(batch);
+		usedSquare.setPosition(18,10);
+		usedSquare.draw(batch);
+		usedSquare.setPosition(10,8);
+		usedSquare.draw(batch);
+		usedSquare.setPosition(12,8);
+		usedSquare.draw(batch);
+		usedSquare.setPosition(14,8);
+		usedSquare.draw(batch);
+
+
+
+
 
 		batch.end();
 	}
@@ -43,6 +106,6 @@ public class FillTheSquare extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		spritesheet.dispose();
 	}
 }
