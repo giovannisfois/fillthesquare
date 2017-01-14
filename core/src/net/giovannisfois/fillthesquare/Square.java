@@ -1,8 +1,10 @@
 package net.giovannisfois.fillthesquare;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
 
-import java.awt.Point;
+
 import java.util.ArrayList;
 
 /**
@@ -19,21 +21,27 @@ public class Square {
         mRows = mCols = size;
         mNumTiles = size*size;
         mTileArray = new Array<Tile>(mNumTiles);
+        for(int i=0;i<mNumTiles;i++){
+            mTileArray.add(new Tile());
+        }
     }
 
-    private Point pos2RowCol(int pos){
+    private GridPoint2 pos2RowCol(int pos){
         int x = pos % mCols;
         int y = pos/mCols;
 
-        return new Point(x,y);
+        return new GridPoint2(x,y);
 
     }
 
     public boolean isChecked(int row, int col){
+        Gdx.app.debug("FillTheSquare", "isChecked Pos " + row + "- " + col);
+
         return mTileArray.get(row+mRows*col).isChecked();
     }
 
     public boolean isEmpty(int row, int col){
+        Gdx.app.debug("FillTheSquare", "isEmpty Pos " + row + "- " + col);
         return mTileArray.get(row+mRows*col).isEmpty();
     }
 
@@ -45,8 +53,8 @@ public class Square {
         mTileArray.get(row+mRows*col).markEmpty();
     }
 
-    public ArrayList<Point> getCheckedSquares(){
-        ArrayList<Point>EmptySquares = new ArrayList<Point>();
+    public ArrayList<GridPoint2> getCheckedSquares(){
+        ArrayList<GridPoint2>EmptySquares = new ArrayList<GridPoint2>();
 
         for(int i = 0; i < mTileArray.size; i ++) {
             Tile tempTile = mTileArray.get(i);
@@ -58,11 +66,17 @@ public class Square {
     }
 
 
-    public ArrayList<Point> getEmptySquares(){
-        ArrayList<Point>EmptySquares = new ArrayList<Point>();
+    public ArrayList<GridPoint2> getEmptySquares(){
+        ArrayList<GridPoint2>EmptySquares = new ArrayList<GridPoint2>();
+
+        Gdx.app.debug("FillTheSquare", "Tile " + mTileArray.size );
+
+
         for(int i = 0; i < mTileArray.size; i ++) {
+            Gdx.app.debug("FillTheSquare", "Tile " + i );
+
             Tile tempTile = mTileArray.get(i);
-            if (tempTile.isChecked()) {
+            if (tempTile.isEmpty()) {
                 EmptySquares.add(pos2RowCol(i));
             }
         }

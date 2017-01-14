@@ -6,12 +6,12 @@ package net.giovannisfois.fillthesquare;
 
 public class Tile {
 
-    final int EMPTY   = 0;
-    final int CHECKED = 1;
+    final int EMPTY   = 1;
+    final int CHECKED = 2;
 
     private int mStatus;
 
-    public Tile(int row, int col) {
+    public Tile() {
         mStatus = EMPTY;
     }
 

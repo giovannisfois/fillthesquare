@@ -1,5 +1,6 @@
 package net.giovannisfois.fillthesquare;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.GridPoint2;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -74,6 +76,7 @@ public class FillTheSquare extends ApplicationAdapter {
 		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_WIDTH*aspectRatio);
 		camera.position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2,0);
 
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 	}
 
 	@Override
@@ -90,14 +93,16 @@ public class FillTheSquare extends ApplicationAdapter {
 		titleSquare.setPosition(2,6);
 		titleSquare.draw(batch);
 
-		ArrayList<Point> emptyPoints   = mSquare.getEmptySquares();
-		ArrayList<Point> checkedPoints = mSquare.getCheckedSquares();
+		ArrayList<GridPoint2> emptySquares = mSquare.getEmptySquares();
+		ArrayList<GridPoint2> checkedSquares = mSquare.getCheckedSquares();
 
 		int TilePosX;
 		int TilePosY;
-		for (Point point : emptyPoints) {
-			TilePosX = SQUARE_BASE_X + 2 * point.getX();
-			TilePosY = SQUARE_BASE_Y + 2*SQUARE_SIZE -point.getX();
+		for (GridPoint2 point : emptySquares) {
+			TilePosX = SQUARE_BASE_X + 2 * point.x;
+			TilePosY = SQUARE_BASE_Y + 2*point.y;
+
+			Gdx.app.debug("FillTheSquare", "Empty Pos " + TilePosX + "- " + TilePosY);
 			emptySquare.setPosition(TilePosX, TilePosY);
 			emptySquare.draw(batch);
 		}
