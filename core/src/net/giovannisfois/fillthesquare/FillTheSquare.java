@@ -9,10 +9,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class FillTheSquare extends ApplicationAdapter {
 
-	final float WORLD_WIDTH  = 22;
-	final float WORLD_HEIGHT = 16;
+	final int WORLD_WIDTH  = 22;
+	final int WORLD_HEIGHT = 16;
+
+	final int SQUARE_SIZE = 5;
+
+	final int SQUARE_BASE_X = 10;
+	final int SQUARE_BASE_Y = 10;
 
 	SpriteBatch batch;
 	Texture spritesheet;
@@ -37,6 +45,8 @@ public class FillTheSquare extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		spritesheet = new Texture("bluesheet.png");
+
+		mSquare = new Square(SQUARE_SIZE);
 
 		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
 
@@ -80,20 +90,18 @@ public class FillTheSquare extends ApplicationAdapter {
 		titleSquare.setPosition(2,6);
 		titleSquare.draw(batch);
 
-		emptySquare.setPosition(10,10);
-		emptySquare.draw(batch);
-		emptySquare.setPosition(12,10);
-		emptySquare.draw(batch);
-		emptySquare.setPosition(14,10);
-		emptySquare.draw(batch);
-		usedSquare.setPosition(16,10);
-		usedSquare.draw(batch);
-		usedSquare.setPosition(18,10);
-		usedSquare.draw(batch);
-		usedSquare.setPosition(10,8);
-		usedSquare.draw(batch);
-		usedSquare.setPosition(12,8);
-		usedSquare.draw(batch);
+		ArrayList<Point> emptyPoints   = mSquare.getEmptySquares();
+		ArrayList<Point> checkedPoints = mSquare.getCheckedSquares();
+
+		int TilePosX;
+		int TilePosY;
+		for (Point point : emptyPoints) {
+			TilePosX = SQUARE_BASE_X + 2 * point.getX();
+			TilePosY = SQUARE_BASE_Y + 2*SQUARE_SIZE -point.getX();
+			emptySquare.setPosition(TilePosX, TilePosY);
+			emptySquare.draw(batch);
+		}
+
 		usedSquare.setPosition(14,8);
 		usedSquare.draw(batch);
 
