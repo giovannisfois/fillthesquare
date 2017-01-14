@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class FillTheSquare extends ApplicationAdapter {
 
-	final float WORLD_WIDTH = 22;
+	final float WORLD_WIDTH  = 22;
 	final float WORLD_HEIGHT = 16;
 
 	SpriteBatch batch;
@@ -28,8 +28,9 @@ public class FillTheSquare extends ApplicationAdapter {
 	private Sprite emptySquare;
 	private Sprite nextSquare;
 
-	OrthographicCamera camera;
+	private Square mSquare;
 
+	OrthographicCamera camera;
 
 
 	@Override
