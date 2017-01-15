@@ -46,8 +46,8 @@ public class Square {
     }
 
     public void markChecked(int row, int col){
-        Gdx.app.debug("FillTheSquare", "Mark Checked " + row + "- " + col + ": "+ row+mRows*col);
-        mTileArray.get(row+mRows*col).markChecked();
+        Gdx.app.debug("FillTheSquare", "Mark Checked " + row + "- " + col + ": "+ col+row*mCols);
+        mTileArray.get(col+row*mCols).markChecked();
     }
 
     public void markEmpty(int row, int col){
@@ -59,7 +59,7 @@ public class Square {
 
         for(int i = 0; i < mTileArray.size; i ++) {
             Tile tempTile = mTileArray.get(i);
-            if(tempTile.isEmpty()){
+            if(tempTile.isChecked()){
                 EmptySquares.add(pos2RowCol(i));
             }
         }

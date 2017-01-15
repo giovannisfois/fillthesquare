@@ -30,13 +30,13 @@ public class FillTheSquare extends ApplicationAdapter {
 	Texture spritesheet;
 
 	private TextureRegion titleSquareRegion;
-	private TextureRegion usedSquareRegion;
+	private TextureRegion checkedSquareRegion;
 	private TextureRegion emptySquareRegion;
 	private TextureRegion nextSquareRegion;
 
 	private Sprite titleSquare;
 
-	private Sprite usedSquare;
+	private Sprite checkedSquare;
 	private Sprite emptySquare;
 	private Sprite nextSquare;
 
@@ -57,21 +57,21 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
 
-		usedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
+		checkedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
 		emptySquareRegion = new TextureRegion(spritesheet,288, 194,49,49);
 		nextSquareRegion  = new TextureRegion(spritesheet,288, 194,49,49);
 
 		titleSquare = new Sprite(titleSquareRegion);
 		titleSquare.setSize(6,2);
 
-		usedSquare = new Sprite(usedSquareRegion);
-		usedSquare.setSize(2,2);
+		checkedSquare = new Sprite(checkedSquareRegion);
+		checkedSquare.setSize(2,2);
 
 		emptySquare = new Sprite(emptySquareRegion);
 		emptySquare.setSize(2,2);
 
-		usedSquare = new Sprite(usedSquareRegion);
-		usedSquare.setSize(2,2);
+		nextSquare = new Sprite(nextSquareRegion);
+		nextSquare.setSize(2,2);
 
 		nextSquare = new Sprite(nextSquareRegion);
 		nextSquare.setSize(2,2);
@@ -98,7 +98,7 @@ public class FillTheSquare extends ApplicationAdapter {
                 int row = -(int)((touchPoint.y - SQUARE_BASE_Y)/2);
                 Gdx.app.debug("FillTheSquare", "touchDown Row Col: " + row + " - " + col);
 
-                if(row > 0 && row < SQUARE_SIZE && col > 0 && col < SQUARE_SIZE){
+                if(row >= 0 && row < SQUARE_SIZE && col >= 0 && col < SQUARE_SIZE){
                     mSquare.markChecked(row, col);
                 }
 
@@ -128,19 +128,19 @@ public class FillTheSquare extends ApplicationAdapter {
 		ArrayList<GridPoint2> checkedSquares = mSquare.getCheckedSquares();
 
 		drawTiles(emptySquares, emptySquare);
-		drawTiles(checkedSquares, emptySquare);
+		drawTiles(checkedSquares, checkedSquare);
 
-		usedSquare.setPosition(0,0);
-		usedSquare.draw(batch);
+		checkedSquare.setPosition(0,0);
+		checkedSquare.draw(batch);
 
-		usedSquare.setPosition(0,WORLD_HEIGHT-2);
-		usedSquare.draw(batch);
+		checkedSquare.setPosition(0,WORLD_HEIGHT-2);
+		checkedSquare.draw(batch);
 
-		usedSquare.setPosition(WORLD_WIDTH-2,WORLD_HEIGHT-2);
-		usedSquare.draw(batch);
+		checkedSquare.setPosition(WORLD_WIDTH-2,WORLD_HEIGHT-2);
+		checkedSquare.draw(batch);
 
-		usedSquare.setPosition(WORLD_WIDTH-2,0);
-		usedSquare.draw(batch);
+		checkedSquare.setPosition(WORLD_WIDTH-2,0);
+		checkedSquare.draw(batch);
 
 
 
