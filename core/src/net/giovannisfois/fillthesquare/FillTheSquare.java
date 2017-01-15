@@ -59,7 +59,9 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
 
-		checkedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
+		//checkedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
+		checkedSquareRegion  = new TextureRegion(spritesheet,380, 36, 38, 36);
+
 		emptySquareRegion = new TextureRegion(spritesheet,288, 194,49,49);
 		nextSquareRegion  = new TextureRegion(spritesheet,288, 194,49,49);
 
@@ -125,10 +127,10 @@ public class FillTheSquare extends ApplicationAdapter {
 		titleSquare.setPosition(2,8);
 		titleSquare.draw(batch);
 
-		ArrayList<GridPoint2> emptySquares = mSquare.getEmptySquares();
+		ArrayList<GridPoint2> Squares = mSquare.getSquares();
 		ArrayList<GridPoint2> checkedSquares = mSquare.getCheckedSquares();
 
-		drawTiles(emptySquares, emptySquare);
+		drawTiles(Squares, emptySquare);
 		drawTiles(checkedSquares, checkedSquare);
 
 		checkedSquare.setPosition(0,0);

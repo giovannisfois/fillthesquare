@@ -78,4 +78,14 @@ public class Square {
         }
         return EmptySquares;
     }
+
+    public ArrayList<GridPoint2> getSquares(){
+        ArrayList<GridPoint2>Squares = new ArrayList<GridPoint2>();
+
+        for(int i = 0; i < mTileArray.size; i ++) {
+            Tile tempTile = mTileArray.get(i);
+            Squares.add(pos2RowCol(i));
+        }
+        return Squares;
+    }
 }
