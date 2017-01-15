@@ -41,6 +41,7 @@ public class FillTheSquare extends ApplicationAdapter {
 	private Sprite nextSquare;
 
 	private Square mSquare;
+	private Game mGame;
 
     Vector3 touchPoint;
 
@@ -54,6 +55,7 @@ public class FillTheSquare extends ApplicationAdapter {
 		spritesheet = new Texture("bluesheet.png");
 
 		mSquare = new Square(SQUARE_SIZE);
+		mGame   = new Game(mSquare, SQUARE_SIZE);
 
 		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
 
@@ -98,9 +100,8 @@ public class FillTheSquare extends ApplicationAdapter {
                 int row = -(int)((touchPoint.y - SQUARE_BASE_Y)/2);
                 Gdx.app.debug("FillTheSquare", "touchDown Row Col: " + row + " - " + col);
 
-                if(row >= 0 && row < SQUARE_SIZE && col >= 0 && col < SQUARE_SIZE){
-                    mSquare.markChecked(row, col);
-                }
+				mGame.handleTouch(row,col);
+
 
                 return true; // return true to indicate the event was handled
             }
