@@ -46,6 +46,7 @@ public class Square {
     }
 
     public void markChecked(int row, int col){
+        Gdx.app.debug("FillTheSquare", "Mark Checked " + row + "- " + col + ": "+ row+mRows*col);
         mTileArray.get(row+mRows*col).markChecked();
     }
 

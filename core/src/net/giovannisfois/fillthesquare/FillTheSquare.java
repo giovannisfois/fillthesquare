@@ -3,6 +3,7 @@ package net.giovannisfois.fillthesquare;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class FillTheSquare extends ApplicationAdapter {
 	final int SQUARE_SIZE = 5;
 
 	final int SQUARE_BASE_X = 10;
-	final int SQUARE_BASE_Y = 10;
+	final int SQUARE_BASE_Y = 14;
 
 	SpriteBatch batch;
 	Texture spritesheet;
@@ -40,7 +42,10 @@ public class FillTheSquare extends ApplicationAdapter {
 
 	private Square mSquare;
 
-	OrthographicCamera camera;
+    Vector3 touchPoint;
+
+
+    OrthographicCamera camera;
 
 
 	@Override
@@ -73,10 +78,36 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
 
-		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_WIDTH*aspectRatio);
+		camera = new OrthographicCamera(WORLD_WIDTH, 4+WORLD_WIDTH*aspectRatio);
 		camera.position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2,0);
 
+        touchPoint = new Vector3();
+
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+
+            @Override
+            public boolean touchDown (int x, int y, int pointer, int button) {
+                // your touch down code here
+                Gdx.app.debug("FillTheSquare", "touchDown: " + x + " - " + y);
+                camera.unproject(touchPoint.set(x, y, 0));
+                Gdx.app.debug("FillTheSquare", "touchDown Local: " + touchPoint.x + " - " + touchPoint.y);
+
+                int col = (int)((touchPoint.x - SQUARE_BASE_X)/2);
+                int row = -(int)((touchPoint.y - SQUARE_BASE_Y)/2);
+                Gdx.app.debug("FillTheSquare", "touchDown Row Col: " + row + " - " + col);
+
+                if(row > 0 && row < SQUARE_SIZE && col > 0 && col < SQUARE_SIZE){
+                    mSquare.markChecked(row, col);
+                }
+
+                return true; // return true to indicate the event was handled
+            }
+
+
+
+        });
 	}
 
 	@Override
@@ -88,26 +119,27 @@ public class FillTheSquare extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		//batch.disableBlending();
-		titleSquare.setPosition(2,10);
+		titleSquare.setPosition(2,12);
 		titleSquare.draw(batch);
-		titleSquare.setPosition(2,6);
+		titleSquare.setPosition(2,8);
 		titleSquare.draw(batch);
 
 		ArrayList<GridPoint2> emptySquares = mSquare.getEmptySquares();
 		ArrayList<GridPoint2> checkedSquares = mSquare.getCheckedSquares();
 
-		int TilePosX;
-		int TilePosY;
-		for (GridPoint2 point : emptySquares) {
-			TilePosX = SQUARE_BASE_X + 2 * point.x;
-			TilePosY = SQUARE_BASE_Y + 2*point.y;
+		drawTiles(emptySquares, emptySquare);
+		drawTiles(checkedSquares, emptySquare);
 
-			Gdx.app.debug("FillTheSquare", "Empty Pos " + TilePosX + "- " + TilePosY);
-			emptySquare.setPosition(TilePosX, TilePosY);
-			emptySquare.draw(batch);
-		}
+		usedSquare.setPosition(0,0);
+		usedSquare.draw(batch);
 
-		usedSquare.setPosition(14,8);
+		usedSquare.setPosition(0,WORLD_HEIGHT-2);
+		usedSquare.draw(batch);
+
+		usedSquare.setPosition(WORLD_WIDTH-2,WORLD_HEIGHT-2);
+		usedSquare.draw(batch);
+
+		usedSquare.setPosition(WORLD_WIDTH-2,0);
 		usedSquare.draw(batch);
 
 
@@ -122,4 +154,20 @@ public class FillTheSquare extends ApplicationAdapter {
 		batch.dispose();
 		spritesheet.dispose();
 	}
+
+	private void  drawTiles(ArrayList<GridPoint2> points, Sprite sprite ){
+
+		int TilePosX;
+		int TilePosY;
+		for (GridPoint2 point : points) {
+			TilePosX = SQUARE_BASE_X + 2 * point.x ;
+			TilePosY = SQUARE_BASE_Y - 2*point.y - 2 ;
+
+			//Gdx.app.debug("FillTheSquare", "Empty Pos " + TilePosX + "- " + TilePosY);
+			sprite.setPosition(TilePosX, TilePosY);
+			sprite.draw(batch);
+		}
+
+	}
+
 }
