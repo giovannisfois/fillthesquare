@@ -36,13 +36,13 @@ public class Square {
 
     public boolean isChecked(int row, int col){
         Gdx.app.debug("FillTheSquare", "isChecked Pos " + row + "- " + col);
+        return mTileArray.get(col+row*mCols).isChecked();
 
-        return mTileArray.get(row+mRows*col).isChecked();
     }
 
     public boolean isEmpty(int row, int col){
-        Gdx.app.debug("FillTheSquare", "isEmpty Pos " + row + "- " + col);
-        return mTileArray.get(row+mRows*col).isEmpty();
+        Gdx.app.debug("FillTheSquare", "Is Empty " + row + "- " + col + ": "+ col+row*mCols);
+        return mTileArray.get(col+row*mCols).isEmpty();
     }
 
     public void markChecked(int row, int col){
@@ -70,12 +70,7 @@ public class Square {
     public ArrayList<GridPoint2> getEmptySquares(){
         ArrayList<GridPoint2>EmptySquares = new ArrayList<GridPoint2>();
 
-        Gdx.app.debug("FillTheSquare", "Tile " + mTileArray.size );
-
-
         for(int i = 0; i < mTileArray.size; i ++) {
-            Gdx.app.debug("FillTheSquare", "Tile " + i );
-
             Tile tempTile = mTileArray.get(i);
             if (tempTile.isEmpty()) {
                 EmptySquares.add(pos2RowCol(i));
