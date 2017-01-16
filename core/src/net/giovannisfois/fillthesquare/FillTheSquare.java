@@ -64,8 +64,8 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		emptyTileRegion = new TextureRegion(spritesheet,288, 194,49,49);
 		checkedTileRegion  = new TextureRegion(spritesheet,288, 140, 38, 36);
-		activeTileRegion  = new TextureRegion(spritesheet,422, 246,36,36);
-		currentTileRegion  = new TextureRegion(spritesheet,386, 210,36,36);
+		activeTileRegion  = new TextureRegion(spritesheet,384, 36,34,34);
+		currentTileRegion  = new TextureRegion(spritesheet,385, 210,36,36);
 
 		titleSquare = new Sprite(titleSquareRegion);
 		titleSquare.setSize(6,2);
