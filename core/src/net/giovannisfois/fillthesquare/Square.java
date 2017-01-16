@@ -27,10 +27,10 @@ public class Square {
     }
 
     private GridPoint2 pos2RowCol(int pos){
-        int x = pos % mCols;
-        int y = pos/mCols;
+        int col = pos % mCols;
+        int row = pos/mCols;
 
-        return new GridPoint2(x,y);
+        return new GridPoint2(row,col);
 
     }
 
@@ -40,21 +40,24 @@ public class Square {
 
     }
 
+    public boolean isValid(int row, int col){
+        if(row<0 || col<0 || row>=mRows || col>= mCols){ return false;}
+        return true;
+    }
+
     public boolean isEmpty(int row, int col){
-        Gdx.app.debug("FillTheSquare", "Is Empty " + row + "- " + col + ": "+ col+row*mCols);
         return mTileArray.get(col+row*mCols).isEmpty();
     }
 
     public void markChecked(int row, int col){
-        Gdx.app.debug("FillTheSquare", "Mark Checked " + row + "- " + col + ": "+ col+row*mCols);
         mTileArray.get(col+row*mCols).markChecked();
     }
 
     public void markEmpty(int row, int col){
-        mTileArray.get(row+mRows*col).markEmpty();
+        mTileArray.get(col+row*mCols).markEmpty();
     }
 
-    public ArrayList<GridPoint2> getCheckedSquares(){
+    public ArrayList<GridPoint2> getCheckedTiles(){
         ArrayList<GridPoint2>EmptySquares = new ArrayList<GridPoint2>();
 
         for(int i = 0; i < mTileArray.size; i ++) {
@@ -67,7 +70,7 @@ public class Square {
     }
 
 
-    public ArrayList<GridPoint2> getEmptySquares(){
+    public ArrayList<GridPoint2> getEmptyTiles(){
         ArrayList<GridPoint2>EmptySquares = new ArrayList<GridPoint2>();
 
         for(int i = 0; i < mTileArray.size; i ++) {
@@ -79,7 +82,7 @@ public class Square {
         return EmptySquares;
     }
 
-    public ArrayList<GridPoint2> getSquares(){
+    public ArrayList<GridPoint2> getTiles(){
         ArrayList<GridPoint2>Squares = new ArrayList<GridPoint2>();
 
         for(int i = 0; i < mTileArray.size; i ++) {

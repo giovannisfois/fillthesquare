@@ -23,28 +23,31 @@ public class FillTheSquare extends ApplicationAdapter {
 
 	final int SQUARE_SIZE = 5;
 
+	//Position of the left bottom corner of the game square
 	final int SQUARE_BASE_X = 10;
 	final int SQUARE_BASE_Y = 14;
 
 	SpriteBatch batch;
 	Texture spritesheet;
 
+	//Various tiles
 	private TextureRegion titleSquareRegion;
-	private TextureRegion checkedSquareRegion;
-	private TextureRegion emptySquareRegion;
-	private TextureRegion nextSquareRegion;
+	private TextureRegion checkedTileRegion;
+	private TextureRegion emptyTileRegion;
+	private TextureRegion activeTileRegion;
+	private TextureRegion currentTileRegion;
 
 	private Sprite titleSquare;
 
-	private Sprite checkedSquare;
-	private Sprite emptySquare;
-	private Sprite nextSquare;
+	private Sprite checkedTile;
+	private Sprite emptyTile;
+	private Sprite activeTile;
+	private Sprite currentTile;
 
 	private Square mSquare;
 	private Game mGame;
 
     Vector3 touchPoint;
-
 
     OrthographicCamera camera;
 
@@ -59,51 +62,48 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		titleSquareRegion = new TextureRegion(spritesheet, 0, 143, 190, 49);
 
-		//checkedSquareRegion  = new TextureRegion(spritesheet,190, 194,49,45);
-		checkedSquareRegion  = new TextureRegion(spritesheet,380, 36, 38, 36);
-
-		emptySquareRegion = new TextureRegion(spritesheet,288, 194,49,49);
-		nextSquareRegion  = new TextureRegion(spritesheet,288, 194,49,49);
+		emptyTileRegion = new TextureRegion(spritesheet,288, 194,49,49);
+		checkedTileRegion  = new TextureRegion(spritesheet,288, 140, 38, 36);
+		activeTileRegion  = new TextureRegion(spritesheet,422, 246,36,36);
+		currentTileRegion  = new TextureRegion(spritesheet,386, 210,36,36);
 
 		titleSquare = new Sprite(titleSquareRegion);
 		titleSquare.setSize(6,2);
 
-		checkedSquare = new Sprite(checkedSquareRegion);
-		checkedSquare.setSize(2,2);
+		//Tiles Initialization
+		checkedTile = new Sprite(checkedTileRegion);
+		checkedTile.setSize(2,2);
 
-		emptySquare = new Sprite(emptySquareRegion);
-		emptySquare.setSize(2,2);
+		emptyTile = new Sprite(emptyTileRegion);
+		emptyTile.setSize(2,2);
 
-		nextSquare = new Sprite(nextSquareRegion);
-		nextSquare.setSize(2,2);
+		activeTile = new Sprite(activeTileRegion);
+		activeTile.setSize(2,2);
 
-		nextSquare = new Sprite(nextSquareRegion);
-		nextSquare.setSize(2,2);
+		currentTile = new Sprite(currentTileRegion);
+		currentTile.setSize(2,2);
 
+		//Set the camera viewpoint
 		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
-
 		camera = new OrthographicCamera(WORLD_WIDTH, 4+WORLD_WIDTH*aspectRatio);
 		camera.position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2,0);
+
 
         touchPoint = new Vector3();
 
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
+		// Intercept the touch events and forward them to the mGame, when appropriate...
         Gdx.input.setInputProcessor(new InputAdapter() {
 
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 // your touch down code here
-                Gdx.app.debug("FillTheSquare", "touchDown: " + x + " - " + y);
                 camera.unproject(touchPoint.set(x, y, 0));
-                Gdx.app.debug("FillTheSquare", "touchDown Local: " + touchPoint.x + " - " + touchPoint.y);
 
                 int col = (int)((touchPoint.x - SQUARE_BASE_X)/2);
                 int row = -(int)((touchPoint.y - SQUARE_BASE_Y)/2);
-                Gdx.app.debug("FillTheSquare", "touchDown Row Col: " + row + " - " + col);
-
 				mGame.handleTouch(row,col);
-
 
                 return true; // return true to indicate the event was handled
             }
@@ -121,33 +121,36 @@ public class FillTheSquare extends ApplicationAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		//batch.disableBlending();
+		batch.disableBlending();
+
 		titleSquare.setPosition(2,12);
 		titleSquare.draw(batch);
 		titleSquare.setPosition(2,8);
 		titleSquare.draw(batch);
 
-		ArrayList<GridPoint2> Squares = mSquare.getSquares();
-		ArrayList<GridPoint2> checkedSquares = mSquare.getCheckedSquares();
+		ArrayList<GridPoint2> Tiles = mSquare.getTiles();
+		ArrayList<GridPoint2> checkedTiles = mSquare.getCheckedTiles();
+		ArrayList<GridPoint2> activeTiles =  mGame.getActiveTiles();
 
-		drawTiles(Squares, emptySquare);
-		drawTiles(checkedSquares, checkedSquare);
+		GridPoint2 currentTile = mGame.getCurrentTile();
 
-		checkedSquare.setPosition(0,0);
-		checkedSquare.draw(batch);
-
-		checkedSquare.setPosition(0,WORLD_HEIGHT-2);
-		checkedSquare.draw(batch);
-
-		checkedSquare.setPosition(WORLD_WIDTH-2,WORLD_HEIGHT-2);
-		checkedSquare.draw(batch);
-
-		checkedSquare.setPosition(WORLD_WIDTH-2,0);
-		checkedSquare.draw(batch);
+		drawTiles(Tiles, emptyTile);
+		drawTiles(checkedTiles, checkedTile);
+		drawTiles(activeTiles, activeTile);
 
 
+		// Angoli del mondo
+		checkedTile.setPosition(0,0);
+		checkedTile.draw(batch);
 
+		checkedTile.setPosition(0,WORLD_HEIGHT-2);
+		checkedTile.draw(batch);
 
+		checkedTile.setPosition(WORLD_WIDTH-2,WORLD_HEIGHT-2);
+		checkedTile.draw(batch);
+
+		checkedTile.setPosition(WORLD_WIDTH-2,0);
+		checkedTile.draw(batch);
 
 		batch.end();
 	}
@@ -162,9 +165,14 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		int TilePosX;
 		int TilePosY;
+		int row;
+		int col;
+
 		for (GridPoint2 point : points) {
-			TilePosX = SQUARE_BASE_X + 2 * point.x ;
-			TilePosY = SQUARE_BASE_Y - 2*point.y - 2 ;
+			row = point.x;
+			col = point.y;
+			TilePosX = SQUARE_BASE_X + 2 * col;
+			TilePosY = SQUARE_BASE_Y - 2*row - 2 ;
 
 			//Gdx.app.debug("FillTheSquare", "Empty Pos " + TilePosX + "- " + TilePosY);
 			sprite.setPosition(TilePosX, TilePosY);
