@@ -42,8 +42,10 @@ public class Game {
         }
     }
 
-    public GridPoint2 getCurrentTile(){
-        return mCurrentPoint;
+    public ArrayList<GridPoint2> getCurrentTiles(){
+        ArrayList<GridPoint2>CurrentTile = new ArrayList<GridPoint2>();
+        CurrentTile.add(mCurrentPoint);
+        return CurrentTile;
     }
 
     public ArrayList<GridPoint2> getActiveTiles(){

@@ -132,11 +132,12 @@ public class FillTheSquare extends ApplicationAdapter {
 		ArrayList<GridPoint2> checkedTiles = mSquare.getCheckedTiles();
 		ArrayList<GridPoint2> activeTiles =  mGame.getActiveTiles();
 
-		GridPoint2 currentTile = mGame.getCurrentTile();
+		ArrayList<GridPoint2> currentTiles = mGame.getCurrentTiles();
 
 		drawTiles(Tiles, emptyTile);
 		drawTiles(checkedTiles, checkedTile);
 		drawTiles(activeTiles, activeTile);
+		drawTiles(currentTiles, currentTile);
 
 
 		// Angoli del mondo
