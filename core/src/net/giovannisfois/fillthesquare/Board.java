@@ -1,5 +1,6 @@
 package net.giovannisfois.fillthesquare;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 public class Board implements IPlayable,IRegionUI {
     playSquare mSquare;
     int mBoardSize;
+    float mTileSize;
     int mEmptyTilesCount;
     int mCheckedTilesCount;
     int mActiveTilesCount;
@@ -49,8 +51,23 @@ public class Board implements IPlayable,IRegionUI {
     }
 
     /* Board Graphic Options */
+
     @Override
-    public void handleTouch(int row, int col) {
+    public boolean isTouched(float base_x, float base_y, float x, float y){
+        float last_x = base_x + mBoardSize*mTileSize;
+        float last_y = base_y - mBoardSize*mTileSize;
+
+        if(x > base_x && x < last_x && y < base_y && y>last_y){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void handleTouch(float base_x, float base_y, float x, float y){
+        int col = (int) ((x - base_x) / mTileSize);
+        int row = -(int) ((y - base_y) / mTileSize);
+        Gdx.app.debug("FillTheSquare", "TouchCol: row:" + row + " col:" + col);
         mSquare.handleTouch(row, col);
         updateCounters();
     }
@@ -76,22 +93,24 @@ public class Board implements IPlayable,IRegionUI {
         mActiveTilesCount   = mSquare.getActiveTiles().size();
     }
 
-    public void setSprites(TextureRegion emptyTileRegion,
+    public void setSprites(float tileSize,
+                            TextureRegion emptyTileRegion,
                             TextureRegion checkedTileRegion,
                             TextureRegion activeTileRegion,
                             TextureRegion currentTileRegion){
+        mTileSize = tileSize;
         //Tiles Initialization
         mCheckedTileSprite = new Sprite(checkedTileRegion);
-        mCheckedTileSprite.setSize(2,2);
+        mCheckedTileSprite.setSize(tileSize,tileSize);
 
         mEmptyTileSprite = new Sprite(emptyTileRegion);
-        mEmptyTileSprite.setSize(2,2);
+        mEmptyTileSprite.setSize(tileSize,tileSize);
 
         mActiveTileSprite = new Sprite(activeTileRegion);
-        mActiveTileSprite.setSize(2,2);
+        mActiveTileSprite.setSize(tileSize,tileSize);
 
         mCurrentTileSprite = new Sprite(currentTileRegion);
-        mCurrentTileSprite.setSize(2,2);
+        mCurrentTileSprite.setSize(tileSize,tileSize);
     }
 
 
@@ -106,8 +125,8 @@ public class Board implements IPlayable,IRegionUI {
         for (GridPoint2 point : points) {
             row = point.x;
             col = point.y;
-            TilePosX = originX + 2 * col;
-            TilePosY = originY - 2*row - 2 ;
+            TilePosX = originX + (int) mTileSize * col;
+            TilePosY = originY - (int)( mTileSize*(row+1)) ;
 
             sprite.setPosition(TilePosX, TilePosY);
             sprite.draw(batch);

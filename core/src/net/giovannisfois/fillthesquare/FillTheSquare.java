@@ -10,21 +10,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.ArrayList;
 
 public class FillTheSquare extends ApplicationAdapter {
 
-	final int WORLD_WIDTH  = 24;
-	final int WORLD_HEIGHT = 18;
+	float mWorldWidth  ;
+	float mWorldHeight ;
 
-	final int SQUARE_SIZE = 5;
+	int mBoardSize;
 
-	//Position of the left bottom corner of the game square
-	final int SQUARE_BASE_X = 10;
-	final int SQUARE_BASE_Y = 14;
+	int mBoardBaseX;
+	int mBoardBaseY;
+	float mBoardTileSize;
 
 	SpriteBatch batch;
 	Texture spritesheet;
@@ -56,32 +53,54 @@ public class FillTheSquare extends ApplicationAdapter {
 		activeTileRegion   = new TextureRegion(spritesheet,384, 36,34,34);
 		currentTileRegion  = new TextureRegion(spritesheet,385, 210,36,36);
 
-		mBoard = new Board(SQUARE_SIZE);
-		mBoard.setSprites(emptyTileRegion, checkedTileRegion, activeTileRegion, currentTileRegion);
+		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+		Gdx.app.debug("FillTheSquare","Screen Height:" +  Gdx.graphics.getHeight());
+		Gdx.app.debug("FillTheSquare","Screen Width:" +   Gdx.graphics.getWidth());
+		Gdx.app.debug("FillTheSquare","Aspect Ratio:" +  aspectRatio);
+
+		mBoardSize  = 5;
+
+		mWorldWidth  = 32;
+		mWorldHeight = (int) (mWorldWidth * aspectRatio);
+        mBoardTileSize = (mWorldWidth - 2)/mBoardSize;
+
+		Gdx.app.debug("FillTheSquare","World Height:" +  mWorldHeight);
+
+		mBoardBaseX = 1;
+		mBoardBaseY = (int) (1+(mBoardSize)*mBoardTileSize);
+
+		Gdx.app.debug("FillTheSquare","Base Y:" +  mBoardBaseY);
+
+		mBoard = new Board(mBoardSize);
+		mBoard.setSprites(mBoardTileSize, emptyTileRegion, checkedTileRegion, activeTileRegion, currentTileRegion);
 
 		titleSquare = new Sprite(titleSquareRegion);
 		titleSquare.setSize(6,2);
 
 		//Set the camera viewpoint
-		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
-		camera = new OrthographicCamera(WORLD_WIDTH, 4+WORLD_WIDTH*aspectRatio);
-		camera.position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2,0);
+		camera = new OrthographicCamera(mWorldWidth, mWorldHeight);
+		camera.position.set(mWorldWidth/2, mWorldHeight/2,0);
 
         touchPoint = new Vector3();
 
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		// Intercept the touch events and forward them to the mGame, when appropriate...
         Gdx.input.setInputProcessor(new InputAdapter() {
 
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
+				Gdx.app.debug("FillTheSquare","TouchCamera: x:" + x + " y:" + y);
+
                 // your touch down code here
                 camera.unproject(touchPoint.set(x, y, 0));
-                int col = (int)((touchPoint.x - SQUARE_BASE_X)/2);
-                int row = -(int)((touchPoint.y - SQUARE_BASE_Y)/2);
-				mBoard.handleTouch(row,col);
-                return true; // return true to indicate the event was handled
+				Gdx.app.debug("FillTheSquare","TouchPoint: x:" + touchPoint.x + " y:" + touchPoint.y);
+                if(mBoard.isTouched(mBoardBaseX,mBoardBaseY, touchPoint.x, touchPoint.y)) {
+                    mBoard.handleTouch(mBoardBaseX,mBoardBaseY, touchPoint.x, touchPoint.y);
+                    return true; // return true to indicate the event was handled
+                }
+                return false;
             }
 
 
@@ -104,7 +123,7 @@ public class FillTheSquare extends ApplicationAdapter {
 		titleSquare.setPosition(2,8);
 		titleSquare.draw(batch);
 
-		mBoard.draw(batch, SQUARE_BASE_X, SQUARE_BASE_Y);
+		mBoard.draw(batch, mBoardBaseX, mBoardBaseY);
 
 		batch.end();
 	}
