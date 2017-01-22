@@ -16,8 +16,8 @@ public class playSquare extends Square {
     /* constructor, instantiates the parent square object and marks the 0,0 point as checked */
     public playSquare(int squareSize) {
         super(squareSize);
-        mCurrentPoint = new GridPoint2(0,0);
-        markChecked(mCurrentPoint.x, mCurrentPoint.y);
+        mCurrentPoint = new GridPoint2(-1,-1);
+        //markChecked(mCurrentPoint.x, mCurrentPoint.y);
     }
 
     /* The user has clicked on the row, col position of the current play square,
@@ -25,6 +25,14 @@ public class playSquare extends Square {
      */
     public void handleTouch(int row, int col){
         if(isValid(row,col)){
+
+            if(mCurrentPoint.x<0 || mCurrentPoint.y<0){
+                markChecked(row, col);
+                mCurrentPoint.set(row,col);
+                return;
+            }
+
+
             if(isEmpty(row, col)) {
 
                 if(mCurrentPoint.x == row && mCurrentPoint.y == col-3){markChecked(row, col);mCurrentPoint.set(row,col); return;}
@@ -55,6 +63,10 @@ public class playSquare extends Square {
         // This is our definition of x and y
         int row = mCurrentPoint.x;
         int col = mCurrentPoint.y;
+
+        if(row<0 || col<0){
+            return getTiles();
+        }
 
         ArrayList<GridPoint2>ActiveSquares = new ArrayList<GridPoint2>();
 

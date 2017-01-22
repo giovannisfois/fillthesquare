@@ -110,7 +110,7 @@ public class FillTheSquare extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(250, 250, 250, 1);
+		Gdx.gl.glClearColor( 94, 129, 162, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
