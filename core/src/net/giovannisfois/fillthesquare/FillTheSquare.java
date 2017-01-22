@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,13 +28,10 @@ public class FillTheSquare extends ApplicationAdapter {
 	Texture spritesheet;
 
 	//Various tiles
-	private TextureRegion titleSquareRegion;
 	private TextureRegion checkedTileRegion;
 	private TextureRegion emptyTileRegion;
 	private TextureRegion activeTileRegion;
 	private TextureRegion currentTileRegion;
-
-	private Sprite titleSquare;
 
 	private Board mBoard;
 
@@ -41,17 +39,18 @@ public class FillTheSquare extends ApplicationAdapter {
 
     OrthographicCamera camera;
 
+	private BitmapFont myFont;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		spritesheet = new Texture("bluesheet.png");
+		//spritesheet = new Texture("bluesheet.png");
+		spritesheet = new Texture("keys_sheet.png");
 
-		titleSquareRegion  = new TextureRegion(spritesheet, 0, 143, 190, 49);
-		emptyTileRegion    = new TextureRegion(spritesheet,288, 194,49,49);
-		checkedTileRegion  = new TextureRegion(spritesheet,288, 140, 38, 36);
-		activeTileRegion   = new TextureRegion(spritesheet,384, 36,34,34);
-		currentTileRegion  = new TextureRegion(spritesheet,385, 210,36,36);
+		emptyTileRegion    = new TextureRegion(spritesheet,148,    0,  74, 74);
+		checkedTileRegion  = new TextureRegion(spritesheet,218,    0,  74, 74);
+		activeTileRegion   = new TextureRegion(spritesheet,  0,    0,  74, 74);
+		currentTileRegion  = new TextureRegion(spritesheet, 74,    0,  74, 74);
 
 		float aspectRatio = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -61,8 +60,12 @@ public class FillTheSquare extends ApplicationAdapter {
 		Gdx.app.debug("FillTheSquare","Aspect Ratio:" +  aspectRatio);
 
 		mBoardSize  = 5;
-
 		mWorldWidth  = 32;
+
+		myFont = new BitmapFont(Gdx.files.internal("demo1.fnt"),false);
+
+		mWorldWidth  = Gdx.graphics.getWidth();
+
 		mWorldHeight = (int) (mWorldWidth * aspectRatio);
         mBoardTileSize = (mWorldWidth - 2)/mBoardSize;
 
@@ -75,9 +78,6 @@ public class FillTheSquare extends ApplicationAdapter {
 
 		mBoard = new Board(mBoardSize);
 		mBoard.setSprites(mBoardTileSize, emptyTileRegion, checkedTileRegion, activeTileRegion, currentTileRegion);
-
-		titleSquare = new Sprite(titleSquareRegion);
-		titleSquare.setSize(6,2);
 
 		//Set the camera viewpoint
 		camera = new OrthographicCamera(mWorldWidth, mWorldHeight);
@@ -114,14 +114,12 @@ public class FillTheSquare extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		//batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.disableBlending();
+		//batch.disableBlending();
 
-		titleSquare.setPosition(2,12);
-		titleSquare.draw(batch);
-		titleSquare.setPosition(2,8);
-		titleSquare.draw(batch);
+
+		myFont.draw(batch, "Fill the Square", 0, mWorldHeight);
 
 		mBoard.draw(batch, mBoardBaseX, mBoardBaseY);
 
